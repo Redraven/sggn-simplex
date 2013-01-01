@@ -1,0 +1,136 @@
+{strip}
+{process_pagedata}
+
+{* With cms_lang_info we retrieve current language information, assign gives us $nls variable we can work with *}
+{cms_lang_info assign='nls'}
+
+{* using strip as we don't want useless whitespace, especially not before doctype *}
+{/strip}<!doctype html>
+<html lang='{if isset($nls)}{$nls->htmlarea()}{/if}' dir='{if isset($nls)}{$nls->direction()}{/if}'>
+<head>
+<meta charset='{if isset($nls)}{$nls->encoding()}{/if}'>
+<title>{title} - {sitename}</title>
+<meta name='viewport' content='initial-scale=1.0 maximum-scale=1.0 user-scalable=no' />
+<meta name='HandheldFriendly' content='true' />
+{* Don't remove this! Metadata is entered in Site Admin/Global settings. *}
+{metadata}
+{* See in news detail template how cannonical url can be assigned from module *}
+{if isset($canonical)}<link rel='canonical' href='{$canonical}' />{elseif isset($content_obj)}<link rel='canonical' href='{$content_obj->GetURL()}' />{/if}
+{* This is how all the stylesheets attached to this template are linked to *}
+{cms_stylesheet}
+{* using google fonts *}
+<link href='//fonts.googleapis.com/css?family=Oswald:400,700' rel='stylesheet' type='text/css'>
+{* learning IE lower then Version 9 some html5 *}
+<!--[if lt IE 9]>
+<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+{* Relational links for interconnections between pages, good for accessibility and Search Engine Optmization *}
+{cms_selflink dir='start' rellink='1'}
+{cms_selflink dir='prev' rellink='1'}
+{cms_selflink dir='next' rellink='1'}
+</head>
+<body id='boxed'>
+<!-- #wrapper (wrapping content in a box) -->
+<div class='container centered' id='wrapper'>
+    <!-- accessibility links, jump to nav or content -->
+    <ul class="visuallyhidden">
+        <li>{anchor anchor='nav' title='Skip to navigation' accesskey='n' text='Skip to navigation'}</li>
+        <li>{anchor anchor='main' title='Skip to content' accesskey='s' text='Skip to content'}</li>
+    </ul>
+    <!-- accessibility //-->
+    <!-- .top (top section of page containing logo, navigation search...) -->
+    <header class='top'>
+        <div class='row header'>
+            <!-- .logo (cmsms logo on the left side) -->
+            <div class='logo grid_2'>
+                <a href='{root_url}' title='{sitename}'>
+                    <img src='{uploads_url}/sggn-simplex/SGGNlogo140.png' width='140' height='140' alt='{sitename}' />
+                </a>
+            </div>
+            <!-- .logo //-->
+            <!-- .main-navigation (main navigation on the right side) -->
+            <div class="grid_10">
+              <nav class='main-navigation grid_12 noprint alpha omega' id='nav' role='navigation'>
+                  {menu template='Simplex_Navigation.tpl'}
+              </nav>
+              <div class="clear"></div>
+              <div class="grid_12 alpha omega">
+                <div class="grid_8 alpha omega"><section class="phrase"><span>St. Georgs Gildene</span></section></div>
+              
+                  {strip}
+                  {search assign='is_search'}
+                  {if isset($is_search)}
+                  <div class='grid_4 search noprint alpha omega' role='search'>
+                        {$startform}
+                        <label for='{$search_actionid}searchinput' class='visuallyhidden'>{$searchprompt}:</label>
+                            <input type='search' class='search-input' id='{$search_actionid}searchinput' name='{$search_actionid}searchinput' size='20' maxlength='50' value='' placeholder='{$searchtext}' />
+                            {if isset($hidden)}{$hidden}{/if}
+                        {$endform}
+                  </div>
+                  {/if}{/strip}
+              </div> {* end grid 10 inner *}
+            </div>  {* end grid 10 outer *} 
+            <!-- .main-navigation //-->
+        </div> {* end row *}
+        <div class='clear'></div>
+        <!-- .header-bottom //-->
+        <!-- place line here -->
+    </header>
+    <!-- .top //-->
+    <!-- .content-wrapper (wrapping div for content area) -->
+    <div class='content-wrapper cf'>
+        <!-- .content (display content first) -->
+        <div class='content-inner grid_8'>
+            <!-- .content-top (breadcrumbs and print button) -->
+            <div class='content-top cf' itemscope itemtype='http://data-vocabulary.org/Breadcrumb'>            
+                {* menu manager has action breadcrumbs since 1.11, you can use {cms_breadcrumbs} tag or {menu action='breadcrumbs'} as below *}
+                {menu action='breadcrumbs'}                
+                {* print tag from CMSPrinting Module *}
+                {print showbutton='false' class='printbutton noprint'}                
+            </div>
+            <!-- .content-top //-->
+            <!-- .content (actual content with title and content tags) -->
+            <article class='content' id='main' role='main'>
+                <h1>{title}</h1> {* title tag *}
+                    {content} {* content entered in page editor area *}
+                    {content_image block='image1' dir='images'}
+            </article>
+            <!-- .content //-->
+        </div>
+        <!-- .content-inner //-->
+        <!-- .sidebar (then show sidebar) -->
+        <aside class='sidebar grid_4'>
+            {* sample of using News Module tag for summary of latest two articles *}
+            {news summarytemplate='Summary_Simplex' number='2' detailpage='news' detailtemplate='Simplex_Detail'}
+        </aside>
+        <!-- .sidebar //-->
+        <div class='cf grid_8'>
+            <span class='previous'>{cms_selflink dir='previous'}</span>
+            <span class='next'>{cms_selflink dir='next'}</span>
+        </div>
+    </div>
+    <!-- .content-wrapper //-->
+    <!-- .footer (footer area) -->
+    <footer class='row footer'>
+        <span class='back-top'>{anchor anchor='main' text='&uarr;'}</span>
+        <section class='grid_4 copyright'>
+            <ul class='social cf'>
+                <li class='twitter'><a title='Twitter' href='http://twitter.com/#!/cmsms'>Twitter</a></li>
+                <li class='facebook'><a title='Facebook' href='https://www.facebook.com/cmsmadesimple'>Facebook</a></li>
+                <li class='linkedin'><a title='LinkedIn' href='http://www.linkedin.com/groups?gid=1139537'>LinkedIn</a></li>
+                <li class='youtube'><a title='YouTube' href='http://www.youtube.com/user/cmsmadesimple'>YouTube</a></li>
+            </ul>
+            {global_content name='footer'}
+        </section>
+        <section class='grid_8 noprint'>
+            <nav class='footer-navigation row'>
+                {menu template='Simplex_Navigation.tpl' excludeprefix='home' number_of_levels='2' loadprops='0'}
+            </nav>
+        </section> 
+    </footer>
+    <div class='clear'></div>
+</div>
+<!-- #wrapper //--> 
+{cms_jquery exclude='jquery-ui.min.js,jquery.ui.nestedSortable.js,jquery.json.min.js' append='uploads/simplex/js/functions.min.js'}
+</body>
+</html>
