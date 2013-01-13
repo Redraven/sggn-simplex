@@ -39,7 +39,7 @@ BASIC STYLES
 body {
     background: [[$white]];
     font-family: sans-serif; /* sans-serif falls back to default OS and Browser font, usually Arial or Helvetica and so on */
-    font-size: 12px;
+    font-size: 100%;
     color: [[$dark_grey]];
     line-height: 1.3
 }
@@ -50,6 +50,9 @@ body#boxed {
 /* add some space inside the boxed container */
 #boxed .container {
     padding: 0 1%
+}
+.container {
+    max-width: 960px;
 }
 a img {
     border: none
